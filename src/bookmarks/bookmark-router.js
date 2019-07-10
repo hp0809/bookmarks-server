@@ -6,48 +6,12 @@ const uuid = require('uuid/v4');
 const logger = require('../logger');
 const bookURL = require('validator')
 
+const bookmarksData = require('./store')
 
-const bookmarksData = [
-    {
-        "id": "cjozyzcil0000lxygs3gyg2mr",
-        "title": "Thinkful",
-        "url": "https://www.thinkful.com",
-        "description": "Think outside the classroom",
-        "rating": 5
-    },
-    {
-        "id": "cjozyzeqh0001lxygb8mhnvhz",
-        "title": "Google",
-        "url": "https://www.google.com",
-        "description": "Where we find everything else",
-        "rating": 4
-    },
-    {
-        "id": "cjkzyzeqh0001lxygb8mhqvh3",
-        "title": "MDN",
-        "url": "https://developer.mozilla.org",
-        "description": "The only place to find web documentation",
-        "rating": 5
-    },
-    {
-        "id": "cjxxajjye000004s7flnrqh7d",
-        "title": "hello",
-        "url": "https://repl.it/@HaliPower/youtube-example-1",
-        "description": "hello",
-        "rating": 3
-    },
-    {
-        "id": "cjxxcazpo000104s7udv3fdwu",
-        "title": "great website",
-        "url": "https://www.greatwebsite.com",
-        "description": "",
-        "rating": 1
-    }
-]
 bookmarksRouter
     .route('/bookmarks')
     .get((req, res) => {
-        res.json(bookmarksData);
+        res.json(bookmarksData.bookmarks);
     })
     .post(bodyParser, (req, res) => {
         const {title, url, description, rating} = req.body;
@@ -89,8 +53,8 @@ bookmarksRouter
             rating
         };
 
-        bookmarksData.push(bookmark);
-        logger.info(`Card with ${id} created`);
+        bookmarksData.bookmarks.push(bookmark);
+        logger.info(`Bookmark with ${id} created`);
 
         res.status(201).location(`http://localhost:8000/bookmarks/${id}`).json(bookmark);
     })
@@ -99,25 +63,25 @@ bookmarksRouter
     .route('/bookmarks/:id')
     .get((req, res) => {
         const {id} = req.params;
-        const bookmark = bookmarksData.find(bm => bm.id == id);
+        const bookmark = bookmarksData.bookmarks.find(bm => bm.id == id);
 
         if(!bookmark) {
-            logger.error(`Card with id ${id} not found`);
-            return res.status(404).send('Card not found');
+            logger.error(`Bookmark with id ${id} not found`);
+            return res.status(404).send('Bookmark not found');
         }
         res.json(bookmark);
     })
     .delete((req, res) => {
         const {id} = req.params;
-        const bookmarksIndex = bookmarksData.findIndex(bm => bm.id == id);
+        const bookmarksIndex = bookmarksData.bookmarks.findIndex(bm => bm.id == id);
 
         if(bookmarksIndex === -1) {
-            logger.error(`Card with id ${id} not found`);
+            logger.error(`Bookmark with id ${id} not found`);
             return res.status(404).send('Not found');
         }
 
-        bookmarksData.splice(bookmarksIndex, 1);
-        logger.info(`Card with id ${id} deleted`);
+        bookmarksData.bookmarks.splice(bookmarksIndex, 1);
+        logger.info(`Bookmark with id ${id} deleted`);
         res.status(204).end();
     })
 
