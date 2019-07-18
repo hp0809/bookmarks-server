@@ -1,3 +1,4 @@
+DROP TYPE IF EXISTS star_rating;
 CREATE TYPE star_rating AS ENUM ('1', '2', '3', '4', '5');
 
 CREATE TABLE bookmarks (

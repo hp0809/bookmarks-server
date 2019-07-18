@@ -4,7 +4,7 @@ const bookmarksRouter = express.Router();
 const bodyParser = express.json();
 const uuid = require('uuid/v4');
 const logger = require('../logger');
-const bookURL = require('validator')
+const bookURL = require('validator');
 
 const bookmarksData = require('./store')
 
@@ -67,7 +67,9 @@ bookmarksRouter
 
         if(!bookmark) {
             logger.error(`Bookmark with id ${id} not found`);
-            return res.status(404).send('Bookmark not found');
+            return res.status(404).send( {
+            error: { message: `Bookmark Not Found` }
+          });
         }
         res.json(bookmark);
     })
